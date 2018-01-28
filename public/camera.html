@@ -5,10 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Camera | CapShare</title>
     <!-- Compiled and minified CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+        crossorigin="anonymous">
 
     <style>
         html,
@@ -34,85 +38,79 @@
             width: 100%;
         }
     </style>
-    <!-- <style>
+    <style>
         .footer {
-            padding: 6px;
+            padding: 5px 0;
+            text-align: center;
             position: absolute;
             bottom: 0;
             width: 100%;
-            height: 60px;
+            /* height: 65px; */
             /* Set the fixed height of the footer here */
-            line-height: 60px;
+            /* line-height: 65px; */
             /* Vertically center the text there */
+            color: #fff;
             background-color: #000;
             opacity: .8;
             /* Add transparency */
         }
-    </style> -->
+
+        .circle {
+            /* position: relative; */
+            background-color: #fff;
+            /* margin: auto; */
+            width: 56px;
+            height: 56px;
+            border-radius: 200px;
+            margin-left: 5px;
+            margin-right: 5px;
+        }
+
+        /* #text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+        } */
+
+        .btn-circle {
+            width: 56px;
+            height: 56px;
+            text-align: center;
+            padding: 6px 0;
+            font-size: 12px;
+            /* line-height: 1.428571429; */
+            border-radius: 56px;
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+    </style>
 </head>
 
 <body>
     <video id="video" autoplay></video>
 
-    <!-- <footer class="footer">
-        <div class="container text-center">
-            <span class="text-muted">
-                <form class="form-inline">
-                    <span class="form-group">
-                        <label for="staticEmail2" class="sr-only">Email</label>
-                        <input type="text" readonly class="form-control-plaintext" id="staticEmail2" value="email@example.com">
-                    </span>
-                    <span class="form-group mx-sm-3">
-                        <label for="inputPassword2" class="sr-only">Password</label>
-                        <input type="password" class="form-control" id="inputPassword2" placeholder="Password">
-                    </span>
-                    <button type="submit" class="btn btn-primary">Confirm identity</button>
-                </form>
-            </span>
-        </div>
-    </footer> -->
+    <footer class="footer">
+        <button type="button" class="btn btn-light btn-circle">
+            <i class="fa fa-unsorted fa-2x" aria-hidden="true"></i>
+        </button>
+
+        <button type="button" class="btn btn-light btn-circle">
+            <i class="fa fa-camera fa-2x" aria-hidden="true"></i>
+        </button>
+
+        <button type="button" class="btn btn-light btn-circle">
+            <i class="fa fa-exchange fa-2x" aria-hidden="true"></i>
+        </button>
+
+        <!-- <i class="fa fa-camera fa-3" aria-hidden="true"></i> -->
+    </footer>
 
     <!-- Compiled and minified JavaScript -->
 
-
-    <div class="fixed-action-btn">
-        <a class="btn-floating btn-large red modal-trigger" href="#modal1">
-            <i class="large material-icons">mode_edit</i>
-        </a>
-    </div>
-
-    <div id="modal1" class="modal bottom-sheet">
-        <div class="modal-content">
-            <h4>Modal Header</h4>
-            <p>A bunch of text</p>
-            <div class="input-field col s12">
-                <select>
-                    <option value="" disabled selected>Choose your option</option>
-                    <option value="1">Option 1</option>
-                    <option value="2">Option 2</option>
-                    <option value="3">Option 3</option>
-                </select>
-                <label>Materialize Select</label>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
-        </div>
-    </div>
-
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
-
     <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
     <script src="js/maincamera.js"></script>
-
-    <script>
-        $(document).ready(function () {
-            // the "href" attribute of the modal trigger must specify the modal ID that wants to be triggered
-            $('.modal').modal();
-            $('select').material_select();
-        });
-    </script>
 </body>
 
 </html>

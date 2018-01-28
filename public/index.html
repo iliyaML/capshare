@@ -186,15 +186,15 @@
 
             const db = firebase.database().ref().child('images');
             db.on('child_added', snap => {
-                document.getElementById('images').innerHTML +=
+                document.getElementById('images').innerHTML =
                     `<div class="card mt-3">
   <a href="${snap.val().url}" target="_blank" class="text-center"><img class="img-fluid" src="${snap.val().url}" alt="Card image cap" id="${snap.key}"></a>
   <div class="card-body">
     <p class="card-text">${snap.val().desc}</p>
   </div>
-</div>`;
+</div>` + document.getElementById('images').innerHTML;
             });
-
+            
             db.on('child_changed', snap => {
                 const imgChanged = document.getElementById(snap.key);
                 imgChanged.src = snap.val().url;
