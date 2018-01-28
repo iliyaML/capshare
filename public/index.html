@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>CapShare</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+
+    <style>
+        body {
+            padding-top: 5rem;
+        }
+
+        #signin,
+        #signout,
+        #user {
+            display: none;
+        }
+
+        video {
+            height: 100vh;
+            width: 100vw;
+        }
+    </style>
+
+    <!-- update the version number as needed -->
+    <script defer src="/__/firebase/4.8.1/firebase-app.js"></script>
+    <!-- include only the Firebase features as you need -->
+    <script defer src="/__/firebase/4.8.1/firebase-auth.js"></script>
+    <script defer src="/__/firebase/4.8.1/firebase-database.js"></script>
+    <script defer src="/__/firebase/4.8.1/firebase-messaging.js"></script>
+    <script defer src="/__/firebase/4.8.1/firebase-storage.js"></script>
+    <!-- initialize the SDK after all desired features are loaded -->
+    <script defer src="/__/firebase/init.js"></script>
+
+    <!-- <link rel="stylesheet" href="https://webrtc.github.io/samples/src/css/main.css"> -->
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">CapShare</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault"
+                aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item" id="user">
+                        <a class="nav-link" href="#" id="user-email"></a>
+                    </li>
+                    <li class="nav-item" id="signin">
+                        <a class="nav-link" href="#">Sign In</a>
+                    </li>
+                    <li class="nav-item" id="signout">
+                        <a class="nav-link" href="#">Sign Out</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var provider = new firebase.auth.GoogleAuthProvider();
+            document.getElementById('signin').addEventListener('click', function () {
+                firebase.auth().signInWithPopup(provider).then(function (result) {
+                    // This gives you a Google Access Token. You can use it to access the Google API.
+                    var token = result.credential.accessToken;
+                    // The signed-in user info.
+                    var user = result.user;
+                    console.log(user);
+                    // ...
+                }).catch(function (error) {
+                    // Handle Errors here.
+                    var errorCode = error.code;
+                    var errorMessage = error.message;
+                    // The email of the user's account used.
+                    var email = error.email;
+                    // The firebase.auth.AuthCredential type that was used.
+                    var credential = error.credential;
+                    // ...
+                    console.log(error);
+                });
+            });
+
+            document.getElementById('signout').addEventListener('click', function () {
+                firebase.auth().signOut();
+            });
+
+            firebase.auth().onAuthStateChanged(user => {
+                if (user) { // logged in
+                    document.getElementById('signin').style.display = "none";
+                    document.getElementById('signout').style.display = "block";
+                    document.getElementById('user-email').innerText = user.email;
+                    document.getElementById('user').style.display = "block";
+                    console.log('Logged in');
+                    console.log(user.email);
+                } else { // logged out
+                    document.getElementById('signin').style.display = "block";
+                    document.getElementById('signout').style.display = "none";
+                    document.getElementById('user').style.display = "none";
+                    console.log('logged out');
+                }
+            });
+        });
+    </script>
+
+    <video id="video" autoplay></video>
+
+    <main role="main" class="container">
+        <div id="container">
+            <h1>
+                CapShare
+            </h1>
+
+            <div id="load" style="display: none;"></div>
+
+            <div class="select">
+                <label for="audioSource">Audio input source: </label>
+                <select id="audioSource" class="form-control"></select>
+            </div>
+
+            <div class="select">
+                <label for="audioOutput">Audio output destination: </label>
+                <select id="audioOutput" class="form-control"></select>
+            </div>
+
+            <div class="select">
+                <label for="videoSource">Video source: </label>
+                <select id="videoSource" class="form-control"></select>
+            </div>
+
+            <div class="select">
+                <label for="photo-filter">Filter: </label>
+                <select id="photo-filter" class="form-control">
+                    <option value="none">Normal</option>
+                    <option value="grayscale(100%)">Grayscale</option>
+                    <option value="sepia(100%)">Sepia</option>
+                    <option value="invert(100%)">Invert</option>
+                    <option value="hue-rotate(90deg)">Hue</option>
+                    <option value="blur(10px)">Blur</option>
+                    <option value="contrast(200%)">Contrast</option>
+                </select>
+            </div>
+
+            <button id="snap" class="btn btn-secondary">Take snapshot</button>
+            <input type="text" id="desc" placeholder="Description" class="form-control">
+            <button id="upload" class="btn btn-secondary">Upload</button>
+            <canvas style="display: none;"></canvas>
+            <span id="url"></span>
+
+            <div id="images"></div>
+        </div>
+    </main>
+
+    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+    <script src="js/main.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+            // // The Firebase SDK is initialized and available here!
+            //
+            // firebase.auth().onAuthStateChanged(user => { });
+            // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
+            // firebase.messaging().requestPermission().then(() => { });
+            // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
+            //
+            // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+            // Get a reference to the storage service, which is used to create references in your storage bucket
+
+
+            const db = firebase.database().ref().child('images');
+            db.on('child_added', snap => {
+                document.getElementById('images').innerHTML +=
+                    `<div class="card mt-3">
+  <a href="${snap.val().url}" target="_blank" class="text-center"><img class="img-fluid" src="${snap.val().url}" alt="Card image cap" id="${snap.key}"></a>
+  <div class="card-body">
+    <p class="card-text">${snap.val().desc}</p>
+  </div>
+</div>`;
+            });
+
+            db.on('child_changed', snap => {
+                const imgChanged = document.getElementById(snap.key);
+                imgChanged.src = snap.val().url;
+            });
+
+            db.on('child_removed', snap => {
+                const imgRemoved = document.getElementById(snap.key);
+                imgRemoved.remove();
+            });
+
+            try {
+                let app = firebase.app();
+                let features = ['auth', 'database', 'messaging', 'storage'].filter(feature => typeof app[feature] === 'function');
+                document.getElementById('load').innerHTML = `Firebase SDK loaded with ${features.join(', ')}`;
+            } catch (e) {
+                console.error(e);
+                document.getElementById('load').innerHTML = 'Error loading the Firebase SDK, check the console.';
+            }
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Iliya Mohamad Lokman">
+  <title>iliyaML-dev</title>
+
+  <!-- update the version number as needed -->
+  <script defer src="/__/firebase/4.8.1/firebase-app.js"></script>
+  <!-- include only the Firebase features as you need -->
+  <script defer src="/__/firebase/4.8.1/firebase-auth.js"></script>
+  <script defer src="/__/firebase/4.8.1/firebase-database.js"></script>
+  <script defer src="/__/firebase/4.8.1/firebase-messaging.js"></script>
+  <script defer src="/__/firebase/4.8.1/firebase-storage.js"></script>
+  <!-- initialize the SDK after all desired features are loaded -->
+  <script defer src="/__/firebase/init.js"></script>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy"
+    crossorigin="anonymous">
+
+  <style media="screen">
+    body {
+      display: flex;
+      min-height: 100vh;
+      width: 100%;
+      padding: 0;
+      margin: 0;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+
+    #uploader {
+      -webkit-appearance: none;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container text-center">
+    <progress value="0" max="100" id="uploader">0%</progress>
+    <br />
+    <!-- <div align="center">
+        <input type="file" value="upload" id="fileButton" />
+      </div> -->
+
+    <div class="custom-file">
+      <input type="file" class="custom-file-input" id="fileButton">
+      <label class="custom-file-label" for="customFile">Choose file</label>
+      <div id="output"></div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var uploader = document.getElementById('uploader');
+      var fileButton = document.getElementById('fileButton');
+
+      fileButton.addEventListener('change', function (e) {
+        // Get file
+        var file = e.target.files[0];
+
+        // Create a storage ref
+        storageRef = firebase.storage().ref('images/' + file.name);
+
+        // Upload file
+        var task = storageRef.put(file);
+
+        // Update progress bar
+        task.on('state_changed',
+          function progress(snapshot) {
+            var percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+
+            uploader.value = percentage;
+          },
+          function error(err) {
+
+          },
+          function complete() {
+            storageRef.getDownloadURL().then(function (url) {
+              window.open(url);
+              // document.getElementById('output').innerHTML = "<img src='" + url + "' />";
+            }).catch(function (error) {
+              console.log(error);
+            });
+          });
+      });
+
+      try {
+        let app = firebase.app();
+        let features = ['auth', 'database', 'messaging', 'storage'].filter(feature => typeof app[feature] === 'function');
+      } catch (e) {
+        console.error(e);
+      }
+    });
+  </script>
+</body>
+
+</html>

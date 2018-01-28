@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+        }
+
+        video {
+            display: block;
+            height: 100%;
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: cover;
+            position: absolute;
+            -moz-transform: rotateY(180deg);
+            -ms-transform: rotateY(180deg);
+            -o-transform: rotateY(180deg);
+            -webkit-transform: rotateY(180deg);
+            transform: rotateY(180deg);
+            width: 100%;
+        }
+    </style>
+    <!-- <style>
+        .footer {
+            padding: 6px;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 60px;
+            /* Set the fixed height of the footer here */
+            line-height: 60px;
+            /* Vertically center the text there */
+            background-color: #000;
+            opacity: .8;
+            /* Add transparency */
+        }
+    </style> -->
+</head>
+
+<body>
+    <video id="video" autoplay></video>
+
+    <!-- <footer class="footer">
+        <div class="container text-center">
+            <span class="text-muted">
+                <form class="form-inline">
+                    <span class="form-group">
+                        <label for="staticEmail2" class="sr-only">Email</label>
+                        <input type="text" readonly class="form-control-plaintext" id="staticEmail2" value="email@example.com">
+                    </span>
+                    <span class="form-group mx-sm-3">
+                        <label for="inputPassword2" class="sr-only">Password</label>
+                        <input type="password" class="form-control" id="inputPassword2" placeholder="Password">
+                    </span>
+                    <button type="submit" class="btn btn-primary">Confirm identity</button>
+                </form>
+            </span>
+        </div>
+    </footer> -->
+
+    <!-- Compiled and minified JavaScript -->
+
+
+    <div class="fixed-action-btn">
+        <a class="btn-floating btn-large red modal-trigger" href="#modal1">
+            <i class="large material-icons">mode_edit</i>
+        </a>
+    </div>
+
+    <div id="modal1" class="modal bottom-sheet">
+        <div class="modal-content">
+            <h4>Modal Header</h4>
+            <p>A bunch of text</p>
+            <div class="input-field col s12">
+                <select>
+                    <option value="" disabled selected>Choose your option</option>
+                    <option value="1">Option 1</option>
+                    <option value="2">Option 2</option>
+                    <option value="3">Option 3</option>
+                </select>
+                <label>Materialize Select</label>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+
+    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+    <script src="js/maincamera.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // the "href" attribute of the modal trigger must specify the modal ID that wants to be triggered
+            $('.modal').modal();
+            $('select').material_select();
+        });
+    </script>
+</body>
+
+</html>
