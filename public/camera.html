@@ -14,6 +14,16 @@
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
         crossorigin="anonymous">
 
+    <!-- update the version number as needed -->
+    <script defer src="/__/firebase/4.8.1/firebase-app.js"></script>
+    <!-- include only the Firebase features as you need -->
+    <script defer src="/__/firebase/4.8.1/firebase-auth.js"></script>
+    <script defer src="/__/firebase/4.8.1/firebase-database.js"></script>
+    <script defer src="/__/firebase/4.8.1/firebase-messaging.js"></script>
+    <script defer src="/__/firebase/4.8.1/firebase-storage.js"></script>
+    <!-- initialize the SDK after all desired features are loaded -->
+    <script defer src="/__/firebase/init.js"></script>
+
     <style>
         html,
         body {
@@ -91,19 +101,21 @@
 <body>
     <video id="video" autoplay></video>
 
+    <canvas style="display: none;"></canvas>
+
     <footer class="footer">
-        <button type="button" class="btn btn-light btn-circle">
+        <button class="btn btn-light btn-circle">
             <i class="fa fa-unsorted fa-2x" aria-hidden="true"></i>
         </button>
 
-        <button type="button" class="btn btn-light btn-circle">
+        <button class="btn btn-light btn-circle" id="snap">
             <i class="fa fa-camera fa-2x" aria-hidden="true"></i>
         </button>
 
-        <button type="button" class="btn btn-light btn-circle">
+        <button class="btn btn-light btn-circle">
             <i class="fa fa-exchange fa-2x" aria-hidden="true"></i>
         </button>
-
+        
         <!-- <i class="fa fa-camera fa-3" aria-hidden="true"></i> -->
     </footer>
 

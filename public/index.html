@@ -17,6 +17,7 @@
             padding-top: 5rem;
         }
 
+        #cameralink,
         #signin,
         #signout,
         #user {
@@ -52,6 +53,9 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarsExampleDefault">
                 <ul class="navbar-nav ml-auto">
+                    <li class="nav-item" id="cameralink">
+                        <a class="nav-link" href="/camera">Take a Photo!</a>
+                    </li>
                     <li class="nav-item" id="user">
                         <a class="nav-link" href="#" id="user-email"></a>
                     </li>
@@ -100,27 +104,29 @@
                     document.getElementById('signout').style.display = "block";
                     document.getElementById('user-email').innerText = user.email;
                     document.getElementById('user').style.display = "block";
+                    document.getElementById('cameralink').style.display = "block";
                     console.log('Logged in');
                     console.log(user.email);
                 } else { // logged out
                     document.getElementById('signin').style.display = "block";
                     document.getElementById('signout').style.display = "none";
                     document.getElementById('user').style.display = "none";
+                    document.getElementById('cameralink').style.display = "none";
                     console.log('logged out');
                 }
             });
         });
     </script>
 
-    <video id="video" autoplay></video>
+    <!-- <video id="video" autoplay></video> -->
 
-    <main role="main" class="container">
+    <main role="main" class="container mb-3">
         <div id="container">
             <h1>
                 CapShare
             </h1>
 
-            <div id="load" style="display: none;"></div>
+            <!--<div id="load" style="display: none;"></div>
 
             <div class="select">
                 <label for="audioSource">Audio input source: </label>
@@ -154,22 +160,23 @@
             <input type="text" id="desc" placeholder="Description" class="form-control">
             <button id="upload" class="btn btn-secondary">Upload</button>
             <canvas style="display: none;"></canvas>
-            <span id="url"></span>
+            <span id="url"></span> -->
 
             <div id="images"></div>
         </div>
     </main>
 
-    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
-    <script src="js/main.js"></script>
+    <!-- <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+    <script src="js/main.js"></script> -->
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
         crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-        crossorigin="anonymous"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script> -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/idb-keyval@2.3.0/idb-keyval.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
@@ -183,37 +190,82 @@
             // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
             // Get a reference to the storage service, which is used to create references in your storage bucket
 
-
             const db = firebase.database().ref().child('images');
-            db.on('child_added', snap => {
-                document.getElementById('images').innerHTML =
-                    `<div class="card mt-3">
-  <a href="${snap.val().url}" target="_blank" class="text-center"><img class="img-fluid" src="${snap.val().url}" alt="Card image cap" id="${snap.key}"></a>
+
+            idbKeyval.get('capshare-uploads').then(val => {
+                if (val !== undefined) {
+                    for (let i in val) {
+                        // console.log(val[i]);
+                        document.getElementById('images').innerHTML =
+                            `<div class="card mt-3">
+  <a href="${val[i].url}" target="_blank" class="text-center"><img class="img-fluid" src="${val[i].url}" alt="Card image cap" id="${i}"></a>
   <div class="card-body">
-    <p class="card-text">${snap.val().desc}</p>
+    <p class="card-text">${val[i].desc}</p>
   </div>
 </div>` + document.getElementById('images').innerHTML;
-            });
-            
-            db.on('child_changed', snap => {
-                const imgChanged = document.getElementById(snap.key);
-                imgChanged.src = snap.val().url;
+                    }
+                }
+                db.on('value', snap => {
+                    idbKeyval.set('capshare-uploads', snap.val());
+                    const val = snap.val();
+                    for (let i in val) {
+                        // console.log(val[i]);
+                        document.getElementById('images').innerHTML =
+                            `<div class="card mt-3">
+  <a href="${val[i].url}" target="_blank" class="text-center"><img class="img-fluid" src="${val[i].url}" alt="Card image cap" id="${i}"></a>
+  <div class="card-body">
+    <p class="card-text">${val[i].desc}</p>
+  </div>
+</div>` + document.getElementById('images').innerHTML;
+                    }
+                });
             });
 
-            db.on('child_removed', snap => {
-                const imgRemoved = document.getElementById(snap.key);
-                imgRemoved.remove();
-            });
 
-            try {
-                let app = firebase.app();
-                let features = ['auth', 'database', 'messaging', 'storage'].filter(feature => typeof app[feature] === 'function');
-                document.getElementById('load').innerHTML = `Firebase SDK loaded with ${features.join(', ')}`;
-            } catch (e) {
-                console.error(e);
-                document.getElementById('load').innerHTML = 'Error loading the Firebase SDK, check the console.';
-            }
+            //             db.on('child_added', snap => {
+            //                 document.getElementById('images').innerHTML =
+            //                     `<div class="card mt-3">
+            //   <a href="${snap.val().url}" target="_blank" class="text-center"><img class="img-fluid" src="${snap.val().url}" alt="Card image cap" id="${snap.key}"></a>
+            //   <div class="card-body">
+            //     <p class="card-text">${snap.val().desc}</p>
+            //   </div>
+            // </div>` + document.getElementById('images').innerHTML;
+            //             });
+
+            // db.on('child_changed', snap => {
+            //     const imgChanged = document.getElementById(snap.key);
+            //     imgChanged.src = snap.val().url;
+            // });
+
+            // db.on('child_removed', snap => {
+            //     const imgRemoved = document.getElementById(snap.key);
+            //     imgRemoved.remove();
+            // });
+
+            // try {
+            //     let app = firebase.app();
+            //     let features = ['auth', 'database', 'messaging', 'storage'].filter(feature => typeof app[feature] === 'function');
+            //     document.getElementById('load').innerHTML = `Firebase SDK loaded with ${features.join(', ')}`;
+            // } catch (e) {
+            //     console.error(e);
+            //     document.getElementById('load').innerHTML = 'Error loading the Firebase SDK, check the console.';
+            // }
         });
+    </script>
+
+    <script>
+        // Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function () {
+                navigator.serviceWorker.register('/sw.js').then(function (registration) {
+                    // Registration was successful
+                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                }, function (err) {
+                    // registration failed :(
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
     </script>
 
 </body>

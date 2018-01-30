@@ -13,26 +13,44 @@ var audioInputSelect = document.querySelector('select#audioSource');
 var audioOutputSelect = document.querySelector('select#audioOutput');
 var videoSelect = document.querySelector('select#videoSource');
 var selectors = [audioInputSelect, audioOutputSelect, videoSelect];
+var canvas = window.canvas = document.querySelector('canvas');
+canvas.width = 480;
+canvas.height = 360;
 const photoFilter = document.getElementById('photo-filter');
 let filter = 'none';
 let url = '';
 
 // audioOutputSelect.disabled = !('sinkId' in HTMLMediaElement.prototype);
 
-// var button = document.querySelector('button#snap');
+var button = document.querySelector('button#snap');
 let state = 1;
-// button.onclick = function () {
-//     if (state) {
-//         video.pause();
-//         button.innerHTML = "Retake snapshot";
-//         state = 0;
-//         createCanvas();
-//     } else {
-//         video.play();
-//         button.innerHTML = "Take snapshot";
-//         state = 1;
-//     }
-// };
+button.onclick = function () {
+    if (state) {
+        video.pause();
+        button.innerHTML = `<i class="fa fa-check fa-2x" aria-hidden="true"></i>`;
+        state = 0;
+        createCanvas();
+    } else {
+        var storageRef = firebase.storage().ref('images/' + (new Date().getTime()));
+
+        // Upload file
+        var task = storageRef.putString(url, 'data_url');
+        task.on('state_changed',
+            function progress(snapshot) {
+            },
+            function error(err) {
+                console.log(err);
+            },
+            function complete() {
+                console.log(task.snapshot.downloadURL);
+                writeNewImage('iliyamlokman@gmail.com', task.snapshot.downloadURL, 'My photo');
+
+                video.play();
+                button.innerHTML = `<i class="fa fa-camera fa-2x" aria-hidden="true"></i>`;
+                state = 1;
+            });
+    }
+};
 
 var upload = document.querySelector('button#upload');
 // upload.onclick = function () {
@@ -55,9 +73,9 @@ var upload = document.querySelector('button#upload');
 function writeNewImage(email, url, desc) {
     // A post entry.
     var postData = {
-      email,
-      url,
-      desc
+        email,
+        url,
+        desc
     };
 
     // Get a key for a new Post.
@@ -68,7 +86,7 @@ function writeNewImage(email, url, desc) {
     updates['/images/' + newPostKey] = postData;
 
     return firebase.database().ref().update(updates);
-  }
+}
 
 function createCanvas() {
     canvas.width = video.videoWidth;
@@ -76,7 +94,8 @@ function createCanvas() {
     canvas.getContext('2d').filter = filter;
     canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
     url = canvas.toDataURL("image/png");
-    document.getElementById('url').innerHTML = "<a href='" + url + "' target='_blank'>Click</a>";
+    // document.getElementById('url').innerHTML = "<a href='" + url + "' target='_blank'>Click</a>";
+    console.log(url);
 }
 
 // photoFilter.addEventListener('change', function (e) {
