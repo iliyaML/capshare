@@ -10,7 +10,12 @@
 
     <link rel="shortcut icon" href="/favicon.ico">
 
-    <!-- Bootstrap -->
+    <script defer src="/__/firebase/4.9.1/firebase-app.js"></script>
+    <script defer src="/__/firebase/4.9.1/firebase-auth.js"></script>
+    <script defer src="/__/firebase/4.9.1/firebase-database.js"></script>
+    <script defer src="/__/firebase/4.9.1/firebase-storage.js"></script>
+    <script defer src="/__/firebase/init.js"></script>
+   
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
@@ -28,21 +33,12 @@
             display: none;
         }
     </style>
-
-    <!-- update the version number as needed -->
-    <script defer src="/__/firebase/4.9.1/firebase-app.js"></script>
-    <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/4.9.1/firebase-auth.js"></script>
-    <script defer src="/__/firebase/4.9.1/firebase-database.js"></script>
-    <script defer src="/__/firebase/4.9.1/firebase-storage.js"></script>
-    <!-- initialize the SDK after all desired features are loaded -->
-    <script defer src="/__/firebase/init.js"></script>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top" style="background-color: rgb(197, 94, 94)">
         <div class="container">
-            <a class="navbar-brand" href="#" style="color: red;">CapShare</a>
+            <a class="navbar-brand" href="#">CapShare</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault"
                 aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -67,8 +63,64 @@
         </div>
     </nav>
 
+    <main role="main" class="container mb-3">
+        <div id="container">
+            <h5>
+                <span style="color:  rgb(197, 94, 94);" id="cap"></span><span id="between"></span>
+                <span style="color:  rgb(197, 94, 94);" id="share"></span><span id="after"></span>
+            </h5>
+
+            <script>
+                let i = 0;
+                let txt = 'Capture Moments and Share Them';
+                let speed = 100;
+
+                function typeWriter() {
+                    if (i < txt.length) {
+                        if (i < 3) {
+                            document.getElementById("cap").innerHTML += txt.charAt(i);
+                        } else if (i < 20) {
+                            document.getElementById("between").innerHTML += txt.charAt(i);
+                        } else if(i < 26) {
+                            document.getElementById("share").innerHTML += txt.charAt(i);
+                        } else {
+                            document.getElementById("after").innerHTML += txt.charAt(i);
+                        }
+                        i++;
+                        setTimeout(typeWriter, speed);
+                    }
+                }
+                typeWriter()
+            </script>
+
+            <div id="images"></div>
+        </div>
+    </main>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/idb-keyval@2.3.0/idb-keyval.min.js"></script>
+
     <script>
+        // Offline support
+        idbKeyval.get('capshare-uploads').then(val => {
+            if (val !== undefined) {
+                for (let i in val) {
+                    document.getElementById('images').innerHTML =
+                        `<div class="card mt-3">
+  <a href="${val[i].url}" target="_blank" class="text-center"><img class="img-fluid" src="${val[i].url}" alt="Card image cap" id="${i}"></a>
+  <div class="card-body">
+        <p class="card-text">${val[i].name} <button class="btn btn-primary" onclick="thumbsUp('${i}')">${(val[i].likes) ? '+' + val[i].likes : ''} <i class="fa fa-thumbs-o-up"></i></button><br /><p>${val[i].desc}</p></p>
+  </div>
+</div>` + document.getElementById('images').innerHTML;
+                }
+            }
+        });
+
         let loggedInUser;
+        let db;
         document.addEventListener('DOMContentLoaded', function () {
             var provider = new firebase.auth.GoogleAuthProvider();
             document.getElementById('signin').addEventListener('click', function () {
@@ -116,67 +168,7 @@
                     console.log('logged out');
                 }
             });
-        });
-    </script>
 
-    <main role="main" class="container mb-3">
-        <div id="container">
-            <h5>
-                <span style="color: red;" id="cap"></span><span id="between"></span>
-                <span style="color: red;" id="share"></span><span id="after"></span>
-            </h5>
-
-            <script>
-                var i = 0;
-                var txt = 'Capture Moments and Share Them'; /* The text */
-                var speed = 100; /* The speed/duration of the effect in milliseconds */
-
-                function typeWriter() {
-                    if (i < txt.length) {
-                        if (i < 3) {
-                            document.getElementById("cap").innerHTML += txt.charAt(i);
-                        } else if (i < 20) {
-                            document.getElementById("between").innerHTML += txt.charAt(i);
-                        } else if(i < 26) {
-                            document.getElementById("share").innerHTML += txt.charAt(i);
-                        } else {
-                            document.getElementById("after").innerHTML += txt.charAt(i);
-                        }
-                        i++;
-                        setTimeout(typeWriter, speed);
-                    }
-                }
-                typeWriter()
-            </script>
-
-            <div id="images"></div>
-        </div>
-    </main>
-
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-        crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-        crossorigin="anonymous"></script>
-
-    <script src="https://cdn.jsdelivr.net/npm/idb-keyval@2.3.0/idb-keyval.min.js"></script>
-    <script>
-        idbKeyval.get('capshare-uploads').then(val => {
-            if (val !== undefined) {
-                for (let i in val) {
-                    // console.log(val[i]);
-                    document.getElementById('images').innerHTML =
-                        `<div class="card mt-3">
-  <a href="${val[i].url}" target="_blank" class="text-center"><img class="img-fluid" src="${val[i].url}" alt="Card image cap" id="${i}"></a>
-  <div class="card-body">
-        <p class="card-text">${val[i].name} <button class="btn btn-primary" onclick="up('${i}')">${(val[i].likes) ? '+' + val[i].likes : ''} <i class="fa fa-thumbs-o-up"></i></button><br /><p>${val[i].desc}</p></p>
-  </div>
-</div>` + document.getElementById('images').innerHTML;
-                }
-            }
-
-        });
-        let db;
-        document.addEventListener('DOMContentLoaded', function () {
             db = firebase.database().ref().child('images');
             db.on('value', snap => {
                 idbKeyval.set('capshare-uploads', snap.val());
@@ -188,14 +180,14 @@
                         `<div class="card mt-3">
   <a href="${val[i].url}" target="_blank" class="text-center"><img class="img-fluid" src="${val[i].url}" alt="Card image cap" id="${i}"></a>
   <div class="card-body">
-    <p class="card-text">${val[i].name} <button class="btn btn-primary" onclick="up('${i}')">${(val[i].likes) ? '+' + val[i].likes : ''} <i class="fa fa-thumbs-o-up"></i></button><br /><p>${val[i].desc}</p></p>
+    <p class="card-text">${val[i].name} <button class="btn btn-primary" onclick="thumbsUp('${i}')">${(val[i].likes) ? '+' + val[i].likes : ''} <i class="fa fa-thumbs-o-up"></i></button><br /><p>${val[i].desc}</p></p>
   </div>
 </div>` + document.getElementById('images').innerHTML;
                 }
             });
         });
 
-        function up(id) {
+        function thumbsUp(id) {
             var uid = loggedInUser.uid;
             firebase.database().ref('images/' + id).transaction(function (post) {
                 if (post) {
@@ -216,15 +208,16 @@
     </script>
 
     <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function () {
-                navigator.serviceWorker.register('/sw.js').then(function (registration) {
-                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                }, function (err) {
-                    console.log('ServiceWorker registration failed: ', err);
-                });
-            });
-        }
+        // Future
+        // if ('serviceWorker' in navigator) {
+        //     window.addEventListener('load', function () {
+        //         navigator.serviceWorker.register('/sw.js').then(function (registration) {
+        //             console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        //         }, function (err) {
+        //             console.log('ServiceWorker registration failed: ', err);
+        //         });
+        //     });
+        // }
     </script>
 </body>
 
