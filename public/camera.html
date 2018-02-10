@@ -1,128 +1,121 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Camera | CapShare</title>
-    <!-- Compiled and minified CSS -->
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-        crossorigin="anonymous">
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
-        crossorigin="anonymous">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CapShare</title>
+
+    <link rel="shortcut icon" href="/favicon.ico">
 
     <!-- update the version number as needed -->
-    <script defer src="/__/firebase/4.8.1/firebase-app.js"></script>
+    <script defer src="/__/firebase/4.9.0/firebase-app.js"></script>
     <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/4.8.1/firebase-auth.js"></script>
-    <script defer src="/__/firebase/4.8.1/firebase-database.js"></script>
-    <script defer src="/__/firebase/4.8.1/firebase-messaging.js"></script>
-    <script defer src="/__/firebase/4.8.1/firebase-storage.js"></script>
+    <script defer src="/__/firebase/4.9.0/firebase-auth.js"></script>
+    <script defer src="/__/firebase/4.9.0/firebase-database.js"></script>
+    <script defer src="/__/firebase/4.9.0/firebase-messaging.js"></script>
+    <script defer src="/__/firebase/4.9.0/firebase-storage.js"></script>
     <!-- initialize the SDK after all desired features are loaded -->
     <script defer src="/__/firebase/init.js"></script>
 
-    <style>
-        html,
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy"
+        crossorigin="anonymous">
+
+    <style media="screen">
         body {
-            margin: 0;
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
             padding: 0;
-            height: 100%;
+            margin: 0;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        #uploader {
+            -webkit-appearance: none;
             width: 100%;
-        }
-
-        video {
-            display: block;
-            height: 100%;
-            max-height: 100%;
-            max-width: 100%;
-            object-fit: cover;
-            position: absolute;
-            -moz-transform: rotateY(180deg);
-            -ms-transform: rotateY(180deg);
-            -o-transform: rotateY(180deg);
-            -webkit-transform: rotateY(180deg);
-            transform: rotateY(180deg);
-            width: 100%;
-        }
-    </style>
-    <style>
-        .footer {
-            padding: 5px 0;
-            text-align: center;
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            /* height: 65px; */
-            /* Set the fixed height of the footer here */
-            /* line-height: 65px; */
-            /* Vertically center the text there */
-            color: #fff;
-            background-color: #000;
-            opacity: .8;
-            /* Add transparency */
-        }
-
-        .circle {
-            /* position: relative; */
-            background-color: #fff;
-            /* margin: auto; */
-            width: 56px;
-            height: 56px;
-            border-radius: 200px;
-            margin-left: 5px;
-            margin-right: 5px;
-        }
-
-        /* #text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: #fff;
-        } */
-
-        .btn-circle {
-            width: 56px;
-            height: 56px;
-            text-align: center;
-            padding: 6px 0;
-            font-size: 12px;
-            /* line-height: 1.428571429; */
-            border-radius: 56px;
-            margin-left: 10px;
-            margin-right: 10px;
         }
     </style>
 </head>
 
 <body>
-    <video id="video" autoplay></video>
+    <div class="container text-center">
+        <progress value="0" max="100" id="uploader">0%</progress>
+        <br />
+        <div class="custom-file">
+            <input type="file" class="custom-file-input" id="fileButton">
+            <label class="custom-file-label" for="customFile">Choose file</label>
+            <div id="output"></div>
+        </div>
+    </div>
 
-    <canvas style="display: none;"></canvas>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var uploader = document.getElementById('uploader');
+            var fileButton = document.getElementById('fileButton');
 
-    <footer class="footer">
-        <button class="btn btn-light btn-circle">
-            <i class="fa fa-unsorted fa-2x" aria-hidden="true"></i>
-        </button>
+            fileButton.click();
 
-        <button class="btn btn-light btn-circle" id="snap">
-            <i class="fa fa-camera fa-2x" aria-hidden="true"></i>
-        </button>
+            fileButton.addEventListener('change', function (e) {
+                // Get file
+                var file = e.target.files[0];
 
-        <button class="btn btn-light btn-circle">
-            <i class="fa fa-exchange fa-2x" aria-hidden="true"></i>
-        </button>
-        
-        <!-- <i class="fa fa-camera fa-3" aria-hidden="true"></i> -->
-    </footer>
+                // Create a storage ref
+                storageRef = firebase.storage().ref('images/' + (new Date().getTime()));
 
-    <!-- Compiled and minified JavaScript -->
+                // Upload file
+                var task = storageRef.put(file);
 
-    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
-    <script src="js/maincamera.js"></script>
+                // Update progress bar
+                task.on('state_changed',
+                    function progress(snapshot) {
+                        var percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+
+                        uploader.value = percentage;
+                    },
+                    function error(err) {
+
+                    },
+                    function complete() {
+                        storageRef.getDownloadURL().then(function (url) {
+                            console.log(task.snapshot.downloadURL);
+                            writeNewImage('iliyamlokman@gmail.com', task.snapshot.downloadURL, 'My photo').then(() => {
+                                window.location = "/";
+                            });
+                        }).catch(function (error) {
+                            console.log(error);
+                        });
+                    });
+            });
+
+            function writeNewImage(email, url, desc) {
+                // A post entry.
+                var postData = {
+                    email,
+                    url,
+                    desc
+                };
+
+                // Get a key for a new Post.
+                var newPostKey = firebase.database().ref().child('images').push().key;
+
+                // Write the new post's data simultaneously in the posts list and the user's post list.
+                var updates = {};
+                updates['/images/' + newPostKey] = postData;
+
+                return firebase.database().ref().update(updates);
+            }
+
+            try {
+                let app = firebase.app();
+                let features = ['auth', 'database', 'messaging', 'storage'].filter(feature => typeof app[feature] === 'function');
+            } catch (e) {
+                console.error(e);
+            }
+        });
+    </script>
 </body>
 
 </html>
