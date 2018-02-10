@@ -129,9 +129,32 @@
     <main role="main" class="container mb-3">
         <div id="container">
             <h5>
-                <span style="color: red;">Cap</span>ture Moments and
-                <span style="color: red;">Share</span> Them
+                <span style="color: red;" id="cap"></span><span id="between"></span>
+                <span style="color: red;" id="share"></span><span id="after"></span>
             </h5>
+
+            <script>
+                var i = 0;
+                var txt = 'Capture Moments and Share Them'; /* The text */
+                var speed = 100; /* The speed/duration of the effect in milliseconds */
+
+                function typeWriter() {
+                    if (i < txt.length) {
+                        if (i < 3) {
+                            document.getElementById("cap").innerHTML += txt.charAt(i);
+                        } else if (i < 20) {
+                            document.getElementById("between").innerHTML += txt.charAt(i);
+                        } else if(i < 26) {
+                            document.getElementById("share").innerHTML += txt.charAt(i);
+                        } else {
+                            document.getElementById("after").innerHTML += txt.charAt(i);
+                        }
+                        i++;
+                        setTimeout(typeWriter, speed);
+                    }
+                }
+                typeWriter()
+            </script>
 
             <div id="images"></div>
         </div>
