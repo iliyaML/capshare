@@ -1,80 +1,86 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-US">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <meta name="mobile-web-app-capable" content="yes">
-  <title>CapShare | iliyaML</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>CapShare | iliyaML</title>
 
-  <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="shortcut icon" href="/favicon.ico">
 
-  <!-- Bootstrap -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-    crossorigin="anonymous">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+        crossorigin="anonymous">
 
-  <style>
-    body {
-      padding-top: 5rem;
-    }
+    <style>
+        body {
+            padding-top: 5rem;
+        }
 
-    #cameralink,
-    #signin,
-    #signout,
-    #user {
-      display: none;
-    }
+        #cameralink,
+        #signin,
+        #signout,
+        #user {
+            display: none;
+        }
 
-    video {
-      height: 100vh;
-      width: 100vw;
-    }
-  </style>
+        /* 
+        video {
+            height: 100vh;
+            width: 100vw;
+        } */
+    </style>
 
-  <!-- update the version number as needed -->
-  <script defer src="/__/firebase/4.9.0/firebase-app.js"></script>
-  <!-- include only the Firebase features as you need -->
-  <script defer src="/__/firebase/4.9.0/firebase-auth.js"></script>
-  <script defer src="/__/firebase/4.9.0/firebase-database.js"></script>
-  <script defer src="/__/firebase/4.9.0/firebase-messaging.js"></script>
-  <script defer src="/__/firebase/4.9.0/firebase-storage.js"></script>
-  <!-- initialize the SDK after all desired features are loaded -->
-  <script defer src="/__/firebase/init.js"></script>
+    <!-- update the version number as needed -->
+    <script defer src="/__/firebase/4.9.0/firebase-app.js"></script>
+    <!-- include only the Firebase features as you need -->
+    <script defer src="/__/firebase/4.9.0/firebase-auth.js"></script>
+    <script defer src="/__/firebase/4.9.0/firebase-database.js"></script>
+    <script defer src="/__/firebase/4.9.0/firebase-messaging.js"></script>
+    <script defer src="/__/firebase/4.9.0/firebase-storage.js"></script>
+    <!-- initialize the SDK after all desired features are loaded -->
+    <script defer src="/__/firebase/init.js"></script>
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-    <div class="container">
-      <a class="navbar-brand" href="#" style="color: red;">CapShare</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault"
-        aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item" id="cameralink">
-            <a class="nav-link" href="/camera">Take a Photo!</a>
-          </li>
-          <li class="nav-item" id="user">
-            <a class="nav-link" href="#" id="user-email"></a>
-          </li>
-          <li class="nav-item" id="signin">
-            <a class="nav-link" href="#">Sign In</a>
-          </li>
-          <li class="nav-item" id="signout">
-            <a class="nav-link" href="#">Sign Out</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#" style="color: red;">CapShare</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault"
+                aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item" id="cameralink">
+                        <a class="nav-link" href="/camera">
+                            <i class="fa fa-camera-retro"></i> Camera</a>
+                    </li>
+                    <li class="nav-item" id="user">
+                        <a class="nav-link" href="#" id="user-email"></a>
+                    </li>
+                    <li class="nav-item" id="signin">
+                        <a class="nav-link" href="#">Sign In</a>
+                    </li>
+                    <li class="nav-item" id="signout">
+                        <a class="nav-link" href="#">Sign Out</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-  <script>
+    <script>
+        let loggedInUser;
         document.addEventListener('DOMContentLoaded', function () {
             var provider = new firebase.auth.GoogleAuthProvider();
             document.getElementById('signin').addEventListener('click', function () {
-                firebase.auth().signInWithPopup(provider).then(function (result) {
+                firebase.auth().signInWithRedirect(provider);
+                firebase.auth().getRedirectResult().then(function (result) {
                     // This gives you a Google Access Token. You can use it to access the Google API.
                     var token = result.credential.accessToken;
                     // The signed-in user info.
@@ -100,6 +106,7 @@
 
             firebase.auth().onAuthStateChanged(user => {
                 if (user) { // logged in
+                    loggedInUser = user;
                     document.getElementById('signin').style.display = "none";
                     document.getElementById('signout').style.display = "block";
                     document.getElementById('user-email').innerText = user.email;
@@ -108,6 +115,7 @@
                     console.log('Logged in');
                     console.log(user.email);
                 } else { // logged out
+                    loggedInUser = null;
                     document.getElementById('signin').style.display = "block";
                     document.getElementById('signout').style.display = "none";
                     document.getElementById('user').style.display = "none";
@@ -121,7 +129,8 @@
     <main role="main" class="container mb-3">
         <div id="container">
             <h5>
-                <span style="color: red;">Cap</span>ture Moments and <span style="color: red;">Share</span> Them
+                <span style="color: red;">Cap</span>ture Moments and
+                <span style="color: red;">Share</span> Them
             </h5>
 
             <div id="images"></div>
@@ -135,6 +144,22 @@
 
     <script src="https://cdn.jsdelivr.net/npm/idb-keyval@2.3.0/idb-keyval.min.js"></script>
     <script>
+        idbKeyval.get('capshare-uploads').then(val => {
+            if (val !== undefined) {
+                for (let i in val) {
+                    // console.log(val[i]);
+                    document.getElementById('images').innerHTML =
+                        `<div class="card mt-3">
+  <a href="${val[i].url}" target="_blank" class="text-center"><img class="img-fluid" src="${val[i].url}" alt="Card image cap" id="${i}"></a>
+  <div class="card-body">
+        <p class="card-text">${val[i].name} <button class="btn btn-primary" onclick="up('${i}')">${(val[i].likes) ? '+' + val[i].likes : ''} <i class="fa fa-thumbs-o-up"></i></button><br /><p>${val[i].desc}</p></p>
+  </div>
+</div>` + document.getElementById('images').innerHTML;
+                }
+            }
+
+        });
+        let db;
         document.addEventListener('DOMContentLoaded', function () {
             // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
             // // The Firebase SDK is initialized and available here!
@@ -147,38 +172,45 @@
             // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
             // Get a reference to the storage service, which is used to create references in your storage bucket
 
-            const db = firebase.database().ref().child('images');
+            db = firebase.database().ref().child('images');
 
-            idbKeyval.get('capshare-uploads').then(val => {
-                if (val !== undefined) {
-                    for (let i in val) {
-                        // console.log(val[i]);
-                        document.getElementById('images').innerHTML =
-                            `<div class="card mt-3">
+
+
+            db.on('value', snap => {
+                idbKeyval.set('capshare-uploads', snap.val());
+                const val = snap.val();
+                document.getElementById('images').innerHTML = '';
+                for (let i in val) {
+                    // console.log(val[i]);
+                    document.getElementById('images').innerHTML =
+                        `<div class="card mt-3">
   <a href="${val[i].url}" target="_blank" class="text-center"><img class="img-fluid" src="${val[i].url}" alt="Card image cap" id="${i}"></a>
   <div class="card-body">
-    <p class="card-text">${val[i].desc}</p>
+    <p class="card-text">${val[i].name} <button class="btn btn-primary" onclick="up('${i}')">${(val[i].likes) ? '+' + val[i].likes : ''} <i class="fa fa-thumbs-o-up"></i></button><br /><p>${val[i].desc}</p></p>
   </div>
 </div>` + document.getElementById('images').innerHTML;
-                    }
                 }
-                db.on('value', snap => {
-                    idbKeyval.set('capshare-uploads', snap.val());
-                    const val = snap.val();
-                    document.getElementById('images').innerHTML = '';
-                    for (let i in val) {
-                        // console.log(val[i]);
-                        document.getElementById('images').innerHTML =
-                            `<div class="card mt-3">
-  <a href="${val[i].url}" target="_blank" class="text-center"><img class="img-fluid" src="${val[i].url}" alt="Card image cap" id="${i}"></a>
-  <div class="card-body">
-    <p class="card-text">${val[i].desc}</p>
-  </div>
-</div>` + document.getElementById('images').innerHTML;
-                    }
-                });
             });
         });
+
+        function up(id) {
+            var uid = loggedInUser.uid;
+            firebase.database().ref('images/' + id).transaction(function (post) {
+                if (post) {
+                    if (post.likeUsers && post.likeUsers[uid]) {
+                        post.likes--;
+                        post.likeUsers[uid] = null;
+                    } else {
+                        post.likes++;
+                        if (!post.likeUsers) {
+                            post.likeUsers = {};
+                        }
+                        post.likeUsers[uid] = true;
+                    }
+                }
+                return post;
+            });
+        }
     </script>
 
     <script>

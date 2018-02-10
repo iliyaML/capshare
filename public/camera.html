@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-US">
 
 <head>
     <meta charset="utf-8">
@@ -20,6 +20,8 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy"
         crossorigin="anonymous">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+        crossorigin="anonymous">
 
     <style media="screen">
         body {
@@ -37,17 +39,32 @@
             -webkit-appearance: none;
             width: 100%;
         }
+
+        #loggedin,
+        #notloggedin {
+            display: none;
+        }
     </style>
 </head>
 
 <body>
-    <div class="container text-center">
-        <progress value="0" max="100" id="uploader">0%</progress>
-        <br />
-        <div class="custom-file">
-            <input type="file" class="custom-file-input" id="fileButton">
-            <label class="custom-file-label" for="customFile">Choose file</label>
-            <div id="output"></div>
+    <div class="container">
+        <div id="loggedin">
+            <div class="custom-file mb-2 text-center">
+                <input type="file" class="custom-file-input" id="fileButton">
+                <label class="custom-file-label" for="fileButton">Choose file</label>
+                <div id="output"></div>
+            </div>
+
+            <input type="text" class="form-control mb-2" placeholder="Enter a description..." id="desc">
+
+            <button class="btn btn-primary btn-block mb-2" id="submitBtn">Submit</button>
+
+            <progress value="0" max="100" id="uploader">0%</progress>
+        </div>
+        <div id="notloggedin">
+            <button class="btn btn-danger btn-block mb-2" id="signIn">
+                <i class="fa fa-google"></i> Log In</button>
         </div>
     </div>
 
@@ -55,13 +72,91 @@
         document.addEventListener('DOMContentLoaded', function () {
             var uploader = document.getElementById('uploader');
             var fileButton = document.getElementById('fileButton');
+            var desc = document.getElementById('desc');
+            var submitBtn = document.getElementById('submitBtn');
+            var fileExists = false;
+            var file;
+            var loggedInUser;
 
-            fileButton.click();
+            var provider = new firebase.auth.GoogleAuthProvider();
+
+            document.getElementById('signIn').addEventListener('click', function () {
+                firebase.auth().signInWithRedirect(provider);
+                firebase.auth().getRedirectResult().then(function (result) {
+                    // This gives you a Google Access Token. You can use it to access the Google API.
+                    var token = result.credential.accessToken;
+                    // The signed-in user info.
+                    var user = result.user;
+                    console.log(user);
+                    // ...
+                }).catch(function (error) {
+                    // Handle Errors here.
+                    var errorCode = error.code;
+                    var errorMessage = error.message;
+                    // The email of the user's account used.
+                    var email = error.email;
+                    // The firebase.auth.AuthCredential type that was used.
+                    var credential = error.credential;
+                    // ...
+                    console.log(error);
+                });
+            });
+
+            firebase.auth().onAuthStateChanged(function (user) {
+                if (user) {
+                    loggedInUser = user;
+                    document.getElementById('loggedin').style.display = "block";
+                    document.getElementById('notloggedin').style.display = "none";
+                    // var displayName = user.displayName;
+                    // var email = user.email;
+                    // var emailVerified = user.emailVerified;
+                    // var photoURL = user.photoURL;
+                    // var isAnonymous = user.isAnonymous;
+                    // var uid = user.uid;
+                    // var providerData = user.providerData;
+                } else {
+                    document.getElementById('notloggedin').style.display = "block";
+                    document.getElementById('loggedin').style.display = "none";
+                }
+            });
 
             fileButton.addEventListener('change', function (e) {
                 // Get file
-                var file = e.target.files[0];
+                file = e.target.files[0];
+                if (file) {
+                    fileExists = true;
+                }
+            });
 
+            function writeNewImage(email, name, url, desc) {
+                // A post entry.
+                var postData = {
+                    email,
+                    name,
+                    url,
+                    desc,
+                    likes: 0
+                };
+
+                // Get a key for a new Post.
+                var newPostKey = firebase.database().ref().child('images').push().key;
+
+                // Write the new post's data simultaneously in the posts list and the user's post list.
+                var updates = {};
+                updates['/images/' + newPostKey] = postData;
+
+                return firebase.database().ref().update(updates);
+            }
+
+            function submitFile() {
+                if (!fileExists) {
+                    alert('Please upload a photo.');
+                    return false;
+                }
+                if (!document.getElementById('desc').value.length) {
+                    alert('Please enter a description');
+                    return false;
+                }
                 // Create a storage ref
                 storageRef = firebase.storage().ref('images/' + (new Date().getTime()));
 
@@ -81,39 +176,16 @@
                     function complete() {
                         storageRef.getDownloadURL().then(function (url) {
                             console.log(task.snapshot.downloadURL);
-                            writeNewImage('iliyamlokman@gmail.com', task.snapshot.downloadURL, 'My photo').then(() => {
+                            writeNewImage(loggedInUser.email, loggedInUser.displayName, task.snapshot.downloadURL, document.getElementById('desc').value).then(() => {
                                 window.location = "/";
                             });
                         }).catch(function (error) {
                             console.log(error);
                         });
                     });
-            });
-
-            function writeNewImage(email, url, desc) {
-                // A post entry.
-                var postData = {
-                    email,
-                    url,
-                    desc
-                };
-
-                // Get a key for a new Post.
-                var newPostKey = firebase.database().ref().child('images').push().key;
-
-                // Write the new post's data simultaneously in the posts list and the user's post list.
-                var updates = {};
-                updates['/images/' + newPostKey] = postData;
-
-                return firebase.database().ref().update(updates);
             }
 
-            try {
-                let app = firebase.app();
-                let features = ['auth', 'database', 'messaging', 'storage'].filter(feature => typeof app[feature] === 'function');
-            } catch (e) {
-                console.error(e);
-            }
+            document.getElementById('submitBtn').addEventListener('click', submitFile);
         });
     </script>
 </body>
