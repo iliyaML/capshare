@@ -27,12 +27,6 @@
         #user {
             display: none;
         }
-
-        /* 
-        video {
-            height: 100vh;
-            width: 100vw;
-        } */
     </style>
 
     <!-- update the version number as needed -->
@@ -183,21 +177,7 @@
         });
         let db;
         document.addEventListener('DOMContentLoaded', function () {
-            // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-            // // The Firebase SDK is initialized and available here!
-            //
-            // firebase.auth().onAuthStateChanged(user => { });
-            // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
-            // firebase.messaging().requestPermission().then(() => { });
-            // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
-            //
-            // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-            // Get a reference to the storage service, which is used to create references in your storage bucket
-
             db = firebase.database().ref().child('images');
-
-
-
             db.on('value', snap => {
                 idbKeyval.set('capshare-uploads', snap.val());
                 const val = snap.val();
@@ -236,14 +216,11 @@
     </script>
 
     <script>
-        // Service Worker
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function () {
                 navigator.serviceWorker.register('/sw.js').then(function (registration) {
-                    // Registration was successful
                     console.log('ServiceWorker registration successful with scope: ', registration.scope);
                 }, function (err) {
-                    // registration failed :(
                     console.log('ServiceWorker registration failed: ', err);
                 });
             });
