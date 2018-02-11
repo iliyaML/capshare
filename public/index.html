@@ -37,15 +37,14 @@
     <nav class="navbar navbar-expand-md navbar-dark fixed-top" style="background-color: rgb(197, 94, 94)">
         <div class="container">
             <a class="navbar-brand" href="#">CapShare</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault"
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarLinks" aria-controls="navbarLinks"
                 aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+            <div class="collapse navbar-collapse" id="navbarLinks">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item" id="cameralink">
-                        <a class="nav-link" href="/camera">
-                            <i class="fa fa-camera-retro"></i> Camera</a>
+                        <a class="nav-link" href="/camera"><i class="fa fa-camera-retro"></i> Camera</a>
                     </li>
                     <li class="nav-item" id="user">
                         <a class="nav-link" href="#" id="user-email"></a>
@@ -105,13 +104,7 @@
         idbKeyval.get('capshare-uploads').then(val => {
             if (val !== undefined) {
                 for (let i in val) {
-                    document.getElementById('images').innerHTML =
-                        `<div class="card mt-3">
-  <a href="${val[i].url}" target="_blank" class="text-center"><img class="img-fluid" src="${val[i].url}" alt="${val[i].desc}" id="${i}"></a>
-  <div class="card-body">
-        <p class="card-text">${val[i].name} <button class="btn btn-primary pull-right" onclick="thumbsUp('${i}')">${(val[i].likes) ? '+' + val[i].likes : ''} <i class="fa fa-thumbs-o-up"></i></button><br /><p>${val[i].desc}</p></p>
-  </div>
-</div>` + document.getElementById('images').innerHTML;
+                    document.getElementById('images').innerHTML = render(val, i) + document.getElementById('images').innerHTML;
                 }
             }
         });
@@ -162,15 +155,19 @@
                 document.getElementById('images').innerHTML = '';
                 for (let i in val) {
                     document.getElementById('images').innerHTML =
-                        `<div class="card mt-3">
+                        render(val, i) + document.getElementById('images').innerHTML;
+                }
+            });
+        });
+
+        function render(val, i){
+                return `<div class="card mt-3">
   <a href="${val[i].url}" target="_blank" class="text-center"><img class="img-fluid" src="${val[i].url}" alt="Card image cap" id="${i}"></a>
   <div class="card-body">
     <p class="card-text">${val[i].name} <button class="btn btn-primary pull-right" onclick="thumbsUp('${i}')">${(val[i].likes) ? '+' + val[i].likes : ''} <i class="fa fa-thumbs-o-up"></i></button><br /><p>${val[i].desc}</p></p>
   </div>
-</div>` + document.getElementById('images').innerHTML;
-                }
-            });
-        });
+</div>`
+            }
 
         function thumbsUp(id) {
             const uid = loggedInUser.uid;
