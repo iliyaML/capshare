@@ -162,14 +162,25 @@
 
         function render(val, i){
                 return `<div class="card mt-3">
-  <a href="${val[i].url}" target="_blank" class="text-center"><img class="img-fluid" src="${val[i].url}" alt="Card image cap" id="${i}"></a>
-  <div class="card-body">
-    <p class="card-text">${val[i].name} <button class="btn btn-primary pull-right" onclick="thumbsUp('${i}')">${(val[i].likes) ? '+' + val[i].likes : ''} <i class="fa fa-thumbs-o-up"></i></button><br /><p>${val[i].desc}</p></p>
-  </div>
-</div>`
+                            <a href="${val[i].url}" target="_blank" class="text-center">
+                                <img class="img-fluid" src="${val[i].url}" alt="Card image cap" id="${i}">
+                            </a>
+                            <div class="card-header">
+                                <strong>${val[i].name}</strong> <button class="btn btn-primary pull-right" onclick="thumbsUp('${i}')" style="min-width: 100px; !important">${(val[i].likes) ? '+' + val[i].likes : ''} <i class="fa fa-thumbs-o-up"></i></button>    
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">
+                                    ${val[i].desc}
+                                </p>
+                            </div>
+                        </div>`
             }
 
         function thumbsUp(id) {
+            if(!loggedInUser){
+                alert('Please sign in to give a like.');
+                return false;
+            }
             const uid = loggedInUser.uid;
             firebase.database().ref('images/' + id).transaction(post => {
                 if (post) {
