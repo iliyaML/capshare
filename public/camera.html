@@ -143,8 +143,11 @@
                     alert('Please enter a description.');
                     return false;
                 }
+
+                const extension = file.name.substring(file.name.lastIndexOf('.'));
+
                 // Create a storage ref
-                const storageRef = firebase.storage().ref('images/' + (new Date().getTime()));
+                const storageRef = firebase.storage().ref('images/' + (new Date().getTime()) + extension);
 
                 // Upload file
                 const task = storageRef.put(file);
@@ -161,13 +164,17 @@
                     },
                     function complete() {
                         storageRef.getDownloadURL().then(function (url) {
-                            // console.log(task.snapshot.downloadURL);
+                            const prefix = 'https://firebasestorage.googleapis.com/v0/b/capshareiml.appspot.com/o/images%2F';
+                            const token = url.lastIndexOf('?alt=media');
+                            const uploadUrl = task.snapshot.downloadURL.substring(0, token).replace(prefix, '');
+                            console.log(uploadUrl);
                             writeNewImage(loggedInUser.email,
                                 loggedInUser.displayName,
-                                task.snapshot.downloadURL.replace('https://firebasestorage.googleapis.com/v0/b/capshareiml.appspot.com/o/images%2F', ''),
-                                document.getElementById('desc').value).then(() => {
-                                    window.location = "/";
-                                });
+                                uploadUrl,
+                                document.getElementById('desc').value
+                            ).then(() => {
+                                window.location = "/";
+                            });
                         }).catch(error => {
                             console.log(error);
                         });

@@ -161,12 +161,16 @@
         });
 
         function render(val, i){
+            const prefix = 'https://firebasestorage.googleapis.com/v0/b/capshareiml.appspot.com/o/images%2F';
                 return `<div class="card mt-3">
-                            <a href="${val[i].url}" target="_blank" class="text-center">
-                                <img class="img-fluid" src="https://firebasestorage.googleapis.com/v0/b/capshareiml.appspot.com/o/images%2F${val[i].url}" alt="${val[i].desc}" id="${i}">
+                            <a href="${prefix}${val[i].url}?alt=media" target="_blank" class="text-center">
+                                <img class="img-fluid" src="${prefix}${val[i].url}?alt=media" alt="${val[i].desc}" id="${i}">
                             </a>
                             <div class="card-header">
-                                <strong>${val[i].name}</strong> <button class="btn btn-primary pull-right" onclick="thumbsUp('${i}')" style="min-width: 80px; !important">${(val[i].likes) ? '+' + val[i].likes : ''} <i class="fa fa-thumbs-o-up"></i></button>    
+                                <strong>${val[i].name}</strong> 
+                                <button class="btn btn-primary pull-right" onclick="thumbsUp('${i}')" style="min-width: 80px; !important">
+                                    ${(val[i].likes) ? '+' + val[i].likes : ''} <i class="fa fa-thumbs-o-up"></i>
+                                </button>    
                             </div>
                             <div class="card-body">
                                 <p class="card-text">
