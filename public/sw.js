@@ -1,4 +1,4 @@
-const APP_CACHE = 'capshare-v1';
+const APP_CACHE = 'capshare-v2';
 const IMG_CACHE = 'capshare-images';
 const urlsToCache = [
     '/favicon.ico',
@@ -11,7 +11,8 @@ const urlsToCache = [
     'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
     '/static/js/jquery.min.js',
     '/static/js/bootstrap.min.js',
-    '/static/js/idb-keyval.min.js'
+    '/static/js/idb-keyval.min.js',
+    '/static/js/image-compressor.js'
 ];
 
 // Install handler

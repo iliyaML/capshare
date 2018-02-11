@@ -163,9 +163,9 @@
         function render(val, i){
             const prefix = 'https://firebasestorage.googleapis.com/v0/b/capshareiml.appspot.com/o/images%2F';
                 return `<div class="card mt-3">
-                            <a href="${prefix}${val[i].url}?alt=media" target="_blank" class="text-center">
+                            <div class="text-center">
                                 <img class="img-fluid" src="${prefix}${val[i].url}?alt=media" alt="${val[i].desc}" id="${i}">
-                            </a>
+                            </div>
                             <div class="card-header">
                                 <strong>${val[i].name}</strong> 
                                 <button class="btn btn-primary pull-right" onclick="thumbsUp('${i}')" style="min-width: 80px; !important">

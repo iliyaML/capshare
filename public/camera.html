@@ -16,6 +16,8 @@
     <script defer src="/__/firebase/4.9.1/firebase-storage.js"></script>
     <script defer src="/__/firebase/init.js"></script>
 
+    <script defer src="/static/js/image-compressor.js"></script>
+
     <link rel="stylesheet" href="/static/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
@@ -112,6 +114,21 @@
                 file = e.target.files[0];
                 if (file) {
                     fileExists = true;
+
+                    console.log("Original file size: " + file.size);
+
+                    if (file.size > 1000000) {
+                        new ImageCompressor(file, {
+                            quality: .4,
+                            success(result) {
+                                file = result;
+                                console.log("New file size: " + file.size);
+                            },
+                            error(e) {
+                                console.log(e.message);
+                            },
+                        });
+                    }
                 }
             });
 
