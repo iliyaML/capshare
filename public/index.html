@@ -109,7 +109,7 @@
                         `<div class="card mt-3">
   <a href="${val[i].url}" target="_blank" class="text-center"><img class="img-fluid" src="${val[i].url}" alt="${val[i].desc}" id="${i}"></a>
   <div class="card-body">
-        <p class="card-text">${val[i].name} <button class="btn btn-primary" onclick="thumbsUp('${i}')">${(val[i].likes) ? '+' + val[i].likes : ''} <i class="fa fa-thumbs-o-up"></i></button><br /><p>${val[i].desc}</p></p>
+        <p class="card-text">${val[i].name} <button class="btn btn-primary pull-right" onclick="thumbsUp('${i}')">${(val[i].likes) ? '+' + val[i].likes : ''} <i class="fa fa-thumbs-o-up"></i></button><br /><p>${val[i].desc}</p></p>
   </div>
 </div>` + document.getElementById('images').innerHTML;
                 }
@@ -165,7 +165,7 @@
                         `<div class="card mt-3">
   <a href="${val[i].url}" target="_blank" class="text-center"><img class="img-fluid" src="${val[i].url}" alt="Card image cap" id="${i}"></a>
   <div class="card-body">
-    <p class="card-text">${val[i].name} <button class="btn btn-primary" onclick="thumbsUp('${i}')">${(val[i].likes) ? '+' + val[i].likes : ''} <i class="fa fa-thumbs-o-up"></i></button><br /><p>${val[i].desc}</p></p>
+    <p class="card-text">${val[i].name} <button class="btn btn-primary pull-right" onclick="thumbsUp('${i}')">${(val[i].likes) ? '+' + val[i].likes : ''} <i class="fa fa-thumbs-o-up"></i></button><br /><p>${val[i].desc}</p></p>
   </div>
 </div>` + document.getElementById('images').innerHTML;
                 }
