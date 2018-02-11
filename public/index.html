@@ -66,11 +66,12 @@
     <main role="main" class="container mb-3">
         <div id="container">
             <h5>
-                <span style="color:  rgb(197, 94, 94);" id="cap"></span><span id="between"></span>
-                <span style="color:  rgb(197, 94, 94);" id="share"></span><span id="after"></span>
+                <span style="color: rgb(197, 94, 94);" id="cap"></span><span id="between"></span>
+                <span style="color: rgb(197, 94, 94);" id="share"></span><span id="after"></span>
             </h5>
 
             <script>
+                // Typewriter animation
                 let i = 0;
                 let txt = 'Capture Moments and Share Them';
                 let speed = 100;
@@ -90,7 +91,7 @@
                         setTimeout(typeWriter, speed);
                     }
                 }
-                typeWriter()
+                typeWriter();
             </script>
 
             <div id="images"></div>
@@ -121,31 +122,21 @@
 
         let loggedInUser;
         let db;
-        document.addEventListener('DOMContentLoaded', function () {
-            var provider = new firebase.auth.GoogleAuthProvider();
-            document.getElementById('signin').addEventListener('click', function () {
+        document.addEventListener('DOMContentLoaded', () => {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            document.getElementById('signin').addEventListener('click', () => {
                 firebase.auth().signInWithRedirect(provider);
-                firebase.auth().getRedirectResult().then(function (result) {
+                firebase.auth().getRedirectResult().then(result => {
                     // This gives you a Google Access Token. You can use it to access the Google API.
-                    var token = result.credential.accessToken;
+                    // const token = result.credential.accessToken;
                     // The signed-in user info.
-                    var user = result.user;
-                    console.log(user);
-                    // ...
-                }).catch(function (error) {
-                    // Handle Errors here.
-                    var errorCode = error.code;
-                    var errorMessage = error.message;
-                    // The email of the user's account used.
-                    var email = error.email;
-                    // The firebase.auth.AuthCredential type that was used.
-                    var credential = error.credential;
-                    // ...
+                    console.log(result.user);
+                }).catch(error => {
                     console.log(error);
                 });
             });
 
-            document.getElementById('signout').addEventListener('click', function () {
+            document.getElementById('signout').addEventListener('click', () => {
                 firebase.auth().signOut();
             });
 
@@ -157,15 +148,14 @@
                     document.getElementById('user-email').innerText = user.email;
                     document.getElementById('user').style.display = "block";
                     document.getElementById('cameralink').style.display = "block";
-                    console.log('Logged in');
-                    console.log(user.email);
+                    console.log('Logged in as ' + user.email);
                 } else { // logged out
                     loggedInUser = null;
                     document.getElementById('signin').style.display = "block";
                     document.getElementById('signout').style.display = "none";
                     document.getElementById('user').style.display = "none";
                     document.getElementById('cameralink').style.display = "none";
-                    console.log('logged out');
+                    console.log('Logged out');
                 }
             });
 
@@ -175,7 +165,6 @@
                 const val = snap.val();
                 document.getElementById('images').innerHTML = '';
                 for (let i in val) {
-                    // console.log(val[i]);
                     document.getElementById('images').innerHTML =
                         `<div class="card mt-3">
   <a href="${val[i].url}" target="_blank" class="text-center"><img class="img-fluid" src="${val[i].url}" alt="Card image cap" id="${i}"></a>
@@ -188,8 +177,8 @@
         });
 
         function thumbsUp(id) {
-            var uid = loggedInUser.uid;
-            firebase.database().ref('images/' + id).transaction(function (post) {
+            const uid = loggedInUser.uid;
+            firebase.database().ref('images/' + id).transaction(post => {
                 if (post) {
                     if (post.likeUsers && post.likeUsers[uid]) {
                         post.likes--;
