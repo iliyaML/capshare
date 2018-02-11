@@ -163,10 +163,10 @@
         function render(val, i){
                 return `<div class="card mt-3">
                             <a href="${val[i].url}" target="_blank" class="text-center">
-                                <img class="img-fluid" src="${val[i].url}" alt="Card image cap" id="${i}">
+                                <img class="img-fluid" src="https://firebasestorage.googleapis.com/v0/b/capshareiml.appspot.com/o/images%2F${val[i].url}" alt="${val[i].desc}" id="${i}">
                             </a>
                             <div class="card-header">
-                                <strong>${val[i].name}</strong> <button class="btn btn-primary pull-right" onclick="thumbsUp('${i}')" style="min-width: 100px; !important">${(val[i].likes) ? '+' + val[i].likes : ''} <i class="fa fa-thumbs-o-up"></i></button>    
+                                <strong>${val[i].name}</strong> <button class="btn btn-primary pull-right" onclick="thumbsUp('${i}')" style="min-width: 80px; !important">${(val[i].likes) ? '+' + val[i].likes : ''} <i class="fa fa-thumbs-o-up"></i></button>    
                             </div>
                             <div class="card-body">
                                 <p class="card-text">

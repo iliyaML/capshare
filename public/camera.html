@@ -164,7 +164,7 @@
                             // console.log(task.snapshot.downloadURL);
                             writeNewImage(loggedInUser.email,
                                 loggedInUser.displayName,
-                                task.snapshot.downloadURL,
+                                task.snapshot.downloadURL.replace('https://firebasestorage.googleapis.com/v0/b/capshareiml.appspot.com/o/images%2F', ''),
                                 document.getElementById('desc').value).then(() => {
                                     window.location = "/";
                                 });
